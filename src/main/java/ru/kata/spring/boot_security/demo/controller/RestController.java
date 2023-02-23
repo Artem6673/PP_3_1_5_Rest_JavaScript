@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -32,6 +33,12 @@ public class RestController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @GetMapping("/authUser")
+    public ResponseEntity<User> getAuthUser() {
+        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(authUser);
+    }
+
     @PostMapping("/users")
     public ResponseEntity<HttpStatus> createUser(@RequestBody User user) {
         userService.saveUser(user);
@@ -44,17 +51,17 @@ public class RestController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("users/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
 
-    @PutMapping("/users/{id}")
-    public ResponseEntity<HttpStatus> editUser(@RequestBody User user) {
-        userService.updateUser(user.getId(),user);
-        return ResponseEntity.ok(HttpStatus.OK);
+    @PutMapping ("/users/{id}")
+    public ResponseEntity<User> update (@RequestBody User user, @PathVariable("id") Long id) {
+        userService.updateUser(id,user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

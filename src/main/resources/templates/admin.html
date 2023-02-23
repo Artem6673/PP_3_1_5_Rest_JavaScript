@@ -13,12 +13,12 @@
 <nav class="navbar navbar-dark bg-dark">
 	<div class="container-fluid">
 		<div class="col-11 text-left" style="margin-top: 0.2%">
-			<ul class="list-inline h5">
+			<ul class="list-inline h5" id="headAuthUser">
 				<li class="list-inline-item text-white text-strong navbar-brand"
-					th:utext="${authUser.getEmail()}"></li>
+					id="headerUsername"></li>
 				<li class="list-inline-item text-white navbar-brand">with roles:</li>
 				<span th:each="role: ${authUser.getRoles()}">
-            <li class="list-inline-item text-white navbar-brand" th:utext="${role}">
+            <li class="list-inline-item text-white navbar-brand" id="headerRoles">
               <strong></strong></li>
             </span>
 
@@ -70,8 +70,8 @@
 								<th>Delete</th>
 							</tr>
 							</thead>
-							<tbody id = "tbodyAllUserTable">
-
+							<tbody id = "allUsersTable">
+									
 							</tbody>
 						</table>
 					</div>
@@ -121,16 +121,11 @@
 												   required minlength="2" maxlength="20" th:field="*{password}"/>
 										</div>
 										<div class="form-group">
-											<label class="font-weight-bold" for="rolesNew">Role</label>
-											<select class="custom-select form-control" id="rolesNew"
-													name="roles"
-													multiple
-													size="2">
-												<option th:each="role : ${roles}"
-														th:value="${role.id}"
-														th:text="${role.rolename}"
-														th:field="*{roles}"></option>
-											</select>
+											<label class="container-fluid" for="newUserRoles"><strong>Role</strong>
+												<select id="newUserRoles" class="form-control" name="roles" multiple size="2">
+											
+												</select>
+											</label>
 										</div>
 										<div class="d-grid col-6 mx-auto">
 											<input type="submit" class="btn btn-success" value="Add new user"/>
@@ -165,27 +160,124 @@
 				<th>Roles</th>
 			</tr>
 			</thead>
-			<tbody>
-			<td th:utext="${authUser.getId()}">Id</td>
-			<td th:utext="${authUser.getName()}">Name</td>
-			<td th:utext="${authUser.getSurname()}">Surname</td>
-			<td th:utext="${authUser.getAge()}">Age</td>
-			<td th:utext="${authUser.getEmail()}">Login</td>
-			<td>
-				<div th:each="role : ${authUser.getRoles()}">
-					<div th:text="${role.getAuthority()}">user</div>
-				</div>
-			</td>
+			<tbody id="authUserTable">
+			
 			</tbody>
 		</table>
 	</div>
 	</div>
 </div>
+<div id="edit" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="editLabel">Edit user</h1>
+				<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="formEditUser" th:method="PATCH">
 
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+					<div class="mb-3">
+						<label for="idEdit" class="col-form-label">ID</label>
+						<input type="text" name="id" class="form-control" id="idEdit" readonly />
+					</div>
+					<div class="mb-3">
+						<label for="nameEdit" class="col-form-label">Name</label>
+						<input type="text" name="name" class="form-control" id="nameEdit" />
+					</div>
+					<div class="mb-3">
+						<label for="SurnameEdit" class="col-form-label">Surname</label>
+						<input type="text" name="surname" class="form-control" id="SurnameEdit">
+					</div>
+					<div class="mb-3">
+						<label for="ageEdit" class="col-form-label">Age</label>
+						<input type="number" name="age" class="form-control" id="ageEdit" />
+					</div>
+					<div class="mb-3">
+						<label for="EmailEdit" class="col-form-label">Email</label>
+						<input type="text" name="email" class="form-control" id="EmailEdit" />
+					</div>
+					<div class="mb-3">
+						<label for="passEdit" class="col-form-label">Password</label>
+						<input type="password" name="password" class="form-control" id="passEdit" />
+					</div>
+					<label class="container-fluid col-6" for="rolesEditUser"><strong>Role</strong>
+						<select class="form-control" id="rolesEditUser" name="roles" multiple size="2">
+
+						</select>
+					</label>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" id="editFormCloseButton" data-dismiss="modal" aria-label="Close">Close</button>
+						<button type="submit" class="btn btn-primary">Edit</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="delete">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteLabel">Delete user</h1>
+				<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="formDeleteUser">
+					<div class="mb-3">
+						<label for="idDelete" class="col-form-label">ID</label>
+						<input type="text" name="id" class="form-control" id="idDelete" readonly />
+					</div>
+					<div class="mb-3">
+						<label for="nameDelete" class="col-form-label">Name</label>
+						<input type="text" name="name" class="form-control" id="nameDelete" readonly />
+					</div>
+					<div class="mb-3">
+						<label for="SurnameDelete" class="col-form-label">Surname</label>
+						<input type="text" name="surname" class="form-control" id="surnameDelete" readonly>
+					</div>
+					<div class="mb-3">
+						<label for="ageDelete" class="col-form-label">Age</label>
+						<input type="number" name="age" class="form-control" id="ageDelete" readonly />
+					</div>
+					<div class="mb-3">
+						<label for="emailDelete" class="col-form-label">Email</label>
+						<input type="text" name="email" class="form-control" id="emailDelete" readonly />
+					</div>
+					<div class="mb-3">
+						<label for="passDelete" class="col-form-label">Password</label>
+						<input type="password" name="password" class="form-control" id="passDelete" required minlength="2"
+							maxlength="20" readonly />
+					</div>
+					<label class="container-fluid col-6" for="rolesDeleteUser"><strong>Role</strong>
+						<select class="form-control" id="rolesDeleteUser" name="roles" multiple size="2" disabled>
+					
+						</select>
+					</label>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal" id="deleteFormCloseButton" aria-label="Close">Close</button>
+						<button type="submit" class="btn btn-danger" >Delete</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+	<script src="jquery-3.6.3.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-	<script src="../static/jquery-3.6.3.min.js"></script>
-	<script src="../static/admin.js"></script>
+	<script src="authUser.js"></script>
+	<script src="usersTable.js"></script>
+	<script src="newUser.js"></script>
+	<script src="deleteModal.js"></script>
+	<script src="deleteUser.js"></script>
+    <script src="editModal.js"></script>
+	<script src="editUser.js"></script>
+
+
 </body>
 </html>
