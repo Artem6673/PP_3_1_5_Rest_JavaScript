@@ -17,7 +17,7 @@ async function allUsers() {
                 <td>${user.surname}</td>
                 <td>${user.age}</td>
                 <td>${user.email}</td>
-                <td>${user.roles.map(role => role.rolename.substring(5).concat(" ")).toString().replaceAll(",", "")}</td>
+                <td>${user.roles.map(role => role.rolename.concat(" ")).toString().replaceAll(",", "")}</td>
                 <td>
                     <button type="button" class="btn btn-info" data-toggle="modal" id="buttonEdit"
                     data-action="edit" data-id="${user.id}" data-target="#edit">Edit</button>

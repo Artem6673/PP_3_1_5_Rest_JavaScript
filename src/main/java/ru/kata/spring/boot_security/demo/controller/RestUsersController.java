@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -12,63 +11,53 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 @CrossOrigin
-@org.springframework.web.bind.annotation.RestController
-@RequestMapping("/api")
-public class RestController {
+@RestController
+@RequestMapping("/api/users")
+public class RestUsersController {
     private final UserService userService;
-    private final RoleService roleService;
+
 
     @Autowired
-    public RestController(UserService userService, RoleService roleService) {
+    public RestUsersController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
+
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/authUser")
-    public ResponseEntity<User> getAuthUser() {
-        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(authUser);
-    }
 
-    @PostMapping("/users")
+    @PostMapping
     public ResponseEntity<HttpStatus> createUser(@RequestBody User user) {
         userService.saveUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteUserById(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
 
-    @PutMapping ("/users/{id}")
+    @PutMapping ("/{id}")
     public ResponseEntity<User> update (@RequestBody User user, @PathVariable("id") Long id) {
         userService.updateUser(id,user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return ResponseEntity.ok(user);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/roles")
-    public ResponseEntity<Set<Role>> getAllRoles() {
-        return new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
-    }
+
 
 
 }

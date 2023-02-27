@@ -13,14 +13,15 @@
 	<nav class="navbar navbar-dark bg-dark">
 		<div class="container-fluid">
 			<div class="col-11 text-left" style="margin-top: 0.2%">
-				<ul class="list-inline h5">
-					<li class="list-inline-item text-white text-strong navbar-brand" id="headerUsername"></li>
+				<ul class="list-inline h5" id="headAuthUser">
+
+					<li th:text="${#authentication.principal.email}" class="list-inline-item text-white text-strong navbar-brand"
+						id="headerUsername"></li>
 					<li class="list-inline-item text-white navbar-brand">with roles:</li>
-					<span th:each="role: ${authUser.getRoles()}">
-						<li class="list-inline-item text-white navbar-brand" id="headerRoles">
-							<strong></strong>
-						</li>
-					</span>
+					<span th:each="role: ${#authentication.principal.roles}">
+            <li th:utext="${role}" class="list-inline-item text-white navbar-brand" id="headerRoles">
+              <strong></strong></li>
+            </span>
 
 				</ul>
 			</div>
@@ -59,7 +60,16 @@
 					</thead>
 
 					<tbody id="authUserTable">
-					
+					<td th:utext="${#authentication.principal.id}">Id</td>
+					<td th:utext="${#authentication.principal.name}">Name</td>
+					<td th:utext="${#authentication.principal.surname}">Surname</td>
+					<td th:utext="${#authentication.principal.age}">Age</td>
+					<td th:utext="${#authentication.principal.email}">Login</td>
+					<td>
+						<div th:each="role : ${#authentication.principal.roles}">
+							<div th:text="${role.getAuthority()}">user</div>
+						</div>
+					</td>
 					</tbody>
 				</table>
 
@@ -82,6 +92,5 @@
 	integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
 	integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script src="authUser.js"></script>
 </body>
 </html>
